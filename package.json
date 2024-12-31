@@ -1,10 +1,9 @@
 {
-  "name": "@aave/aave-utilities",
+  "name": "@luigibyte/aave-utilities",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aave/aave-utilities.git"
+    "url": "https://github.com/protofire/aave-utilities.git"
   },
-  "private": true,
   "license": "MIT",
   "scripts": {
     "postinstall": "lerna bootstrap",

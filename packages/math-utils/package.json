@@ -1,5 +1,5 @@
 {
-  "name": "@aave/math-utils",
+  "name": "@luigibyte/math-utils",
   "version": "1.30.2",
   "license": "MIT",
   "description": "",
@@ -41,13 +41,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aave/aave-utilities.git"
+    "url": "git+https://github.com/protofire/aave-utilities.git"
   },
   "author": "",
   "bugs": {
-    "url": "https://github.com/aave/aave-utilities/issues"
+    "url": "https://github.com/protofire/aave-utilities/issues"
   },
   "sideEffects": false,
-  "homepage": "https://github.com/aave/aave-utilities#readme",
+  "homepage": "https://github.com/protofire/aave-utilities#readme",
   "gitHead": "47a9a6d1f940185ab1e7f6c2bea61564b2abe47a"
 }
