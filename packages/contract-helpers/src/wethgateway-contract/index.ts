@@ -36,6 +36,7 @@ export type WETHWithdrawParamsType = {
   lendingPool: tEthereumAddress;
   user: tEthereumAddress;
   amount: string;
+  realAmount: string;
   aTokenAddress: tEthereumAddress;
   onBehalfOf?: tEthereumAddress;
 };
@@ -304,11 +305,13 @@ export class WETHGatewayService
     @isEthAddress('user')
     @isEthAddress('onBehalfOf')
     @isPositiveOrMinusOneAmount('amount')
+    @isPositiveAmount('realAmount')
     @isEthAddress('aTokenAddress')
     {
       lendingPool,
       user,
       amount,
+      realAmount,
       onBehalfOf,
       aTokenAddress,
     }: WETHWithdrawParamsType,
@@ -324,7 +327,7 @@ export class WETHGatewayService
       token: aTokenAddress,
       user,
       spender: this.wethGatewayAddress,
-      amount,
+      amount: valueToWei(realAmount, 18),
     });
 
     if (!approved) {
@@ -332,7 +335,7 @@ export class WETHGatewayService
         user,
         token: aTokenAddress,
         spender: this.wethGatewayAddress,
-        amount: constants.MaxUint256.toString(),
+        amount: valueToWei(realAmount, 18),
       });
       txs.push(approveTx);
     }
