@@ -17,6 +17,7 @@ export type LPWithdrawParamsType = {
   user: tEthereumAddress;
   reserve: tEthereumAddress;
   amount: string;
+  realAmount: string;
   onBehalfOf?: tEthereumAddress;
   aTokenAddress?: tEthereumAddress;
 };
