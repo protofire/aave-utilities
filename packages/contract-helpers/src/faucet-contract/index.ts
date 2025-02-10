@@ -7,11 +7,7 @@ import {
   tEthereumAddress,
   transactionType,
 } from '../commons/types';
-import {
-  mintAmountsPerToken,
-  DEFAULT_NULL_VALUE_ON_TX,
-  valueToWei,
-} from '../commons/utils';
+import { DEFAULT_NULL_VALUE_ON_TX } from '../commons/utils';
 import { FaucetValidator } from '../commons/validators/methodValidators';
 import { isEthAddress } from '../commons/validators/paramValidators';
 import { IFaucet } from './typechain/IFaucet';
@@ -19,8 +15,6 @@ import { IFaucet__factory } from './typechain/IFaucet__factory';
 
 export type FaucetParamsType = {
   userAddress: tEthereumAddress;
-  reserve: tEthereumAddress;
-  tokenSymbol: string;
 };
 
 export interface FaucetInterface {
@@ -44,18 +38,11 @@ export class FaucetService
   @FaucetValidator
   public mint(
     @isEthAddress('userAddress')
-    @isEthAddress('reserve')
-    { userAddress, reserve, tokenSymbol }: FaucetParamsType,
+    { userAddress }: FaucetParamsType,
   ): EthereumTransactionTypeExtended[] {
-    const defaultAmount = valueToWei('1000', 18);
-    const amount: string = mintAmountsPerToken[tokenSymbol]
-      ? mintAmountsPerToken[tokenSymbol]
-      : defaultAmount;
-
     const faucetContract = this.getContractInstance(this.faucetAddress);
     const txCallback: () => Promise<transactionType> = this.generateTxCallback({
-      rawTxMethod: async () =>
-        faucetContract.populateTransaction.mint(reserve, amount),
+      rawTxMethod: async () => faucetContract.populateTransaction.mintAll(),
       from: userAddress,
       value: DEFAULT_NULL_VALUE_ON_TX,
     });
@@ -67,5 +54,14 @@ export class FaucetService
         gas: this.generateTxPriceEstimation([], txCallback),
       },
     ];
+  }
+
+  public async lastMintTime(
+    @isEthAddress('userAddress')
+    { userAddress }: FaucetParamsType,
+  ) {
+    const faucetContract = this.getContractInstance(this.faucetAddress);
+
+    return faucetContract.lastMintTime(userAddress);
   }
 }
