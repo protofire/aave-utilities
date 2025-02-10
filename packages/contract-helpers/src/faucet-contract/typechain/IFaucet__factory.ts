@@ -17,46 +17,17 @@ export class IFaucet__factory {
 
 const _abi = [
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_token',
-        type: 'address',
-      },
-    ],
-    name: 'getMinter',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
+    inputs: [],
+    name: 'mintAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_token',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: '_amount',
-        type: 'uint256',
-      },
-    ],
-    name: 'mint',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'payable',
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
+    name: 'lastMintTime',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
     type: 'function',
   },
 ];

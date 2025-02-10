@@ -21,18 +21,23 @@ import { FunctionFragment, EventFragment, Result } from '@ethersproject/abi';
 
 interface IFaucetInterface extends ethers.utils.Interface {
   functions: {
-    'getMinter(address)': FunctionFragment;
-    'mint(address,uint256)': FunctionFragment;
+    'mintAll()': FunctionFragment;
+    'lastMintTime(address)': FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: 'getMinter', values: [string]): string;
+  encodeFunctionData(functionFragment: 'mintAll'): string;
+
+  decodeFunctionResult(functionFragment: 'mintAll'): Result;
+
   encodeFunctionData(
-    functionFragment: 'mint',
-    values: [string, BigNumberish],
+    functionFragment: 'lastMintTime',
+    values: [string],
   ): string;
 
-  decodeFunctionResult(functionFragment: 'getMinter', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: 'lastMintTime',
+    data: BytesLike,
+  ): Result;
 
   events: {};
 }
@@ -51,69 +56,41 @@ export class IFaucet extends Contract {
   interface: IFaucetInterface;
 
   functions: {
-    getMinter(
-      _token: string,
-      overrides?: CallOverrides,
-    ): Promise<{
-      0: string;
-    }>;
+    mintAll(overrides?: PayableOverrides): Promise<ContractTransaction>;
 
-    'getMinter(address)'(
-      _token: string,
-      overrides?: CallOverrides,
-    ): Promise<{
-      0: string;
-    }>;
+    'mintAll()'(overrides?: PayableOverrides): Promise<ContractTransaction>;
 
-    mint(
-      _token: string,
-      _amount: BigNumberish,
+    lastMintTime(
+      user: string,
       overrides?: PayableOverrides,
     ): Promise<ContractTransaction>;
 
-    'mint(address,uint256)'(
-      _token: string,
-      _amount: BigNumberish,
+    'lastMintTime(address)'(
+      user: string,
       overrides?: PayableOverrides,
     ): Promise<ContractTransaction>;
   };
 
-  getMinter(_token: string, overrides?: CallOverrides): Promise<string>;
+  mintAll(overrides?: PayableOverrides): Promise<ContractTransaction>;
 
-  'getMinter(address)'(
-    _token: string,
-    overrides?: CallOverrides,
-  ): Promise<string>;
+  'mintAll()'(overrides?: PayableOverrides): Promise<ContractTransaction>;
 
-  mint(
-    _token: string,
-    _amount: BigNumberish,
+  lastMintTime(user: string, overrides?: PayableOverrides): Promise<BigNumber>;
+
+  'lastMintTime(address)'(
+    user: string,
     overrides?: PayableOverrides,
-  ): Promise<ContractTransaction>;
-
-  'mint(address,uint256)'(
-    _token: string,
-    _amount: BigNumberish,
-    overrides?: PayableOverrides,
-  ): Promise<ContractTransaction>;
+  ): Promise<BigNumber>;
 
   callStatic: {
-    getMinter(_token: string, overrides?: CallOverrides): Promise<string>;
+    mintAll(overrides?: CallOverrides): Promise<void>;
 
-    'getMinter(address)'(
-      _token: string,
-      overrides?: CallOverrides,
-    ): Promise<string>;
+    'mintAll()'(overrides?: CallOverrides): Promise<void>;
 
-    mint(
-      _token: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
+    lastMintTime(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    'mint(address,uint256)'(
-      _token: string,
-      _amount: BigNumberish,
+    'lastMintTime(address)'(
+      user: string,
       overrides?: CallOverrides,
     ): Promise<BigNumber>;
   };
@@ -121,46 +98,33 @@ export class IFaucet extends Contract {
   filters: {};
 
   estimateGas: {
-    getMinter(_token: string, overrides?: CallOverrides): Promise<BigNumber>;
+    mintAll(overrides?: PayableOverrides): Promise<BigNumber>;
 
-    'getMinter(address)'(
-      _token: string,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
+    'mintAll()'(overrides?: PayableOverrides): Promise<BigNumber>;
 
-    mint(
-      _token: string,
-      _amount: BigNumberish,
+    lastMintTime(
+      user: string,
       overrides?: PayableOverrides,
     ): Promise<BigNumber>;
 
-    'mint(address,uint256)'(
-      _token: string,
-      _amount: BigNumberish,
+    'lastMintTime(address)'(
+      user: string,
       overrides?: PayableOverrides,
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    getMinter(
-      _token: string,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
+    mintAll(overrides?: PayableOverrides): Promise<PopulatedTransaction>;
 
-    'getMinter(address)'(
-      _token: string,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
+    'mintAll()'(overrides?: PayableOverrides): Promise<PopulatedTransaction>;
 
-    mint(
-      _token: string,
-      _amount: BigNumberish,
+    lastMintTime(
+      user: string,
       overrides?: PayableOverrides,
     ): Promise<PopulatedTransaction>;
 
-    'mint(address,uint256)'(
-      _token: string,
-      _amount: BigNumberish,
+    'lastMintTime(address)'(
+      user: string,
       overrides?: PayableOverrides,
     ): Promise<PopulatedTransaction>;
   };

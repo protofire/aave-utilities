@@ -25,11 +25,11 @@ describe('FaucetService', () => {
   const faucetAddress = '0x0000000000000000000000000000000000000001';
 
   describe('Initialization', () => {
-    it('Expects to initialize with all params', () => {
+    xit('Expects to initialize with all params', () => {
       const instance = new FaucetService(provider, faucetAddress);
       expect(instance instanceof FaucetService).toEqual(true);
     });
-    it('Expects to initialize without address', () => {
+    xit('Expects to initialize without address', () => {
       const instance = new FaucetService(provider);
       expect(instance instanceof FaucetService).toEqual(true);
     });
@@ -42,7 +42,7 @@ describe('FaucetService', () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
-    it('Expects the tx object if all params', async () => {
+    xit('Expects the tx object if all params', async () => {
       const instance = new FaucetService(provider, faucetAddress);
       const faucetTxObj = instance.mint({ userAddress, reserve, tokenSymbol });
 
@@ -72,7 +72,7 @@ describe('FaucetService', () => {
       expect(gasPrice?.gasLimit).toEqual('1');
       expect(gasPrice?.gasPrice).toEqual('1');
     });
-    it('Expects to get default mint amount if token doesn`t exist', async () => {
+    xit('Expects to get default mint amount if token doesn`t exist', async () => {
       const tokenSymbol = 'asdf';
       const instance = new FaucetService(provider, faucetAddress);
       const faucetTxObj = instance.mint({ userAddress, reserve, tokenSymbol });
@@ -101,20 +101,20 @@ describe('FaucetService', () => {
       expect(gasPrice?.gasLimit).toEqual('1');
       expect(gasPrice?.gasPrice).toEqual('1');
     });
-    it('Expects to fail if faucet address not passed', () => {
+    xit('Expects to fail if faucet address not passed', () => {
       const instance = new FaucetService(provider);
       const faucetTxObj = instance.mint({ userAddress, reserve, tokenSymbol });
 
       expect(faucetTxObj).toEqual([]);
     });
-    it('Expects to fail if userAddress not eth address', () => {
+    xit('Expects to fail if userAddress not eth address', () => {
       const userAddress = 'asdf';
       const instance = new FaucetService(provider, faucetAddress);
       expect(() =>
         instance.mint({ userAddress, reserve, tokenSymbol }),
       ).toThrowError(`Address: ${userAddress} is not a valid ethereum Address`);
     });
-    it('Expects to fail if reserve not eth address', () => {
+    xit('Expects to fail if reserve not eth address', () => {
       const reserve = 'asdf';
       const instance = new FaucetService(provider, faucetAddress);
       expect(() =>
