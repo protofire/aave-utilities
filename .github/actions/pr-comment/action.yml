@@ -5,8 +5,8 @@ inputs:
     description: Pull request number to comment on
     required: true
 runs:
-  using: "composite"
-  steps:  
+  using: 'composite'
+  steps:
     - name: get canary version
       shell: sh
       run: |

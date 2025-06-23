@@ -6,7 +6,7 @@ concurrency:
 
 on:
   pull_request:
-    branches: ["master"]
+    branches: ['master']
 
 jobs:
   build:
@@ -21,16 +21,15 @@ jobs:
       - name: Build packages
         uses: ./.github/actions/build
 
-
       - name: Save SHA of commit
-        if: github.event.number 
+        if: github.event.number
         shell: sh
         run: |
           mkdir -p ./__pr
           echo ${{ github.event.pull_request.head.sha }} > ./__pr/SHA
           echo ${{ github.event.number }} > ./__pr/NUM
       - name: store PR info
-        if: github.event.number 
+        if: github.event.number
         uses: actions/upload-artifact@6673cd052c4cd6fcf4b4e6e60ea986c889389535 # v3.0.0
         with:
           name: pr

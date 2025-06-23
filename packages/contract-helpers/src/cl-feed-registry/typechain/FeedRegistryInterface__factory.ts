@@ -13,11 +13,11 @@ export class FeedRegistryInterface__factory {
     address: string,
     signerOrProvider: Signer | Provider,
   ): FeedRegistryInterface {
-    return (new Contract(
+    return new Contract(
       address,
       _abi,
       signerOrProvider,
-    ) as unknown) as FeedRegistryInterface;
+    ) as unknown as FeedRegistryInterface;
   }
 }
 

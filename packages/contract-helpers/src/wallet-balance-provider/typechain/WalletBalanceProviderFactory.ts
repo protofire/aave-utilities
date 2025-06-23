@@ -17,11 +17,11 @@ export class WalletBalanceProviderFactory extends ContractFactory {
     address: string,
     signerOrProvider: Signer | Provider,
   ): WalletBalanceProvider {
-    return (new Contract(
+    return new Contract(
       address,
       _abi,
       signerOrProvider,
-    ) as unknown) as WalletBalanceProvider;
+    ) as unknown as WalletBalanceProvider;
   }
 }
 

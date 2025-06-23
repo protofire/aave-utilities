@@ -16,11 +16,11 @@ export class PermissionManagerFactory extends ContractFactory {
     address: string,
     signerOrProvider: Signer | Provider,
   ): PermissionManager {
-    return (new Contract(
+    return new Contract(
       address,
       _abi,
       signerOrProvider,
-    ) as unknown) as PermissionManager;
+    ) as unknown as PermissionManager;
   }
 }
 
