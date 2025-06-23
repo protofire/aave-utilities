@@ -589,12 +589,15 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
       user,
       reserve,
       amount,
-      realAmount,
+      realAmount, // TODO: realAmount is not currently used but is part of the API
       onBehalfOf,
       aTokenAddress,
       useOptimizedPath,
     }: LPWithdrawParamsType,
   ): Promise<EthereumTransactionTypeExtended[]> {
+    // Suppress unused variable warning - realAmount is part of the API but not currently used
+
+    void realAmount;
     if (reserve.toLowerCase() === API_ETH_MOCK_ADDRESS.toLowerCase()) {
       if (!aTokenAddress) {
         throw new Error(
@@ -606,7 +609,6 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
         lendingPool: this.poolAddress,
         user,
         amount,
-        realAmount,
         onBehalfOf,
         aTokenAddress,
       });
