@@ -8,7 +8,7 @@ import {
   tEthereumAddress,
   transactionType,
 } from '../commons/types';
-import { DEFAULT_APPROVE_AMOUNT, valueToWei } from '../commons/utils';
+import { valueToWei } from '../commons/utils';
 import {
   SignStakingValidator,
   StakingValidator,
@@ -213,7 +213,7 @@ export class StakingServiceV3
         user,
         token: stakedToken,
         spender: this.stakingContractAddress,
-        amount: DEFAULT_APPROVE_AMOUNT,
+        amount: convertedAmount,
       });
       txs.push(approveTx);
     }
