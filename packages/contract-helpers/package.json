@@ -5,9 +5,9 @@
   "license": "MIT",
   "description": "",
   "scripts": {
-    "clean": "cd ../.. && npx rimraf packages/contract-helpers/dist packages/math-utils/*.log*",
     "lint": "cd ../.. && eslint packages/contract-helpers/src/**/*.ts",
     "check-types": "yarn build -- --noEmit",
+    "clean": "npx rimraf dist",
     "prebuild": "npm run clean",
     "build": "cd ../.. && tsc -p packages/contract-helpers/tsconfig.json && tsc -p packages/contract-helpers/tsconfig.json --module commonjs --outDir ./packages/contract-helpers/dist/cjs",
     "test": "cd ../.. && yarn test packages/contract-helpers",
