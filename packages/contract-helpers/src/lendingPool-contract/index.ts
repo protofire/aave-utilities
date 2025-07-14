@@ -282,9 +282,17 @@ export class LendingPool
     @isEthAddress('user')
     @isEthAddress('reserve')
     @isPositiveOrMinusOneAmount('amount')
+    @isPositiveAmount('realAmount')
     @isEthAddress('onBehalfOf')
     @isEthAddress('aTokenAddress')
-    { user, reserve, amount, onBehalfOf, aTokenAddress }: LPWithdrawParamsType,
+    {
+      user,
+      reserve,
+      amount,
+      realAmount,
+      onBehalfOf,
+      aTokenAddress,
+    }: LPWithdrawParamsType,
   ): Promise<EthereumTransactionTypeExtended[]> {
     if (reserve.toLowerCase() === API_ETH_MOCK_ADDRESS.toLowerCase()) {
       if (!aTokenAddress) {
@@ -297,6 +305,7 @@ export class LendingPool
         lendingPool: this.lendingPoolAddress,
         user,
         amount,
+        realAmount,
         onBehalfOf,
         aTokenAddress,
       });

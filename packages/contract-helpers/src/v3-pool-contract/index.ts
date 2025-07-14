@@ -582,12 +582,14 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
     @isEthAddress('user')
     @isEthAddress('reserve')
     @isPositiveOrMinusOneAmount('amount')
+    @isPositiveAmount('realAmount')
     @isEthAddress('onBehalfOf')
     @isEthAddress('aTokenAddress')
     {
       user,
       reserve,
       amount,
+      realAmount,
       onBehalfOf,
       aTokenAddress,
       useOptimizedPath,
@@ -604,6 +606,7 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
         lendingPool: this.poolAddress,
         user,
         amount,
+        realAmount,
         onBehalfOf,
         aTokenAddress,
       });
