@@ -1,6 +1,26 @@
-<p align="center"> <a href="https://aave.com/" rel="noopener" target="_blank"><img width="300" src="https://aave.com/governanceGhosts.svg" alt="Aave logo"></a></p>
+# <!--
 
-<h1 align="center">Aave Utilities</h1>
+# 🚨 IMPORTANT NOTICE 🚨
+
+-->
+
+> ⚠️ **ATTENTION: Main branch is not the source of truth for publishing or
+> important changes!**
+>
+> Please refer to the branch **<YOUR-BRANCH-NAME-HERE>** for all updates,
+> publishing, and modifications.
+>
+> - Do **NOT** use `master` for publishing until further notice.
+> - All new changes and releases should be made in **<YOUR-BRANCH-NAME-HERE>**.
+> - If you have any questions, please contact the maintainers.
+
+---
+
+<h1 align="center">Aave Utilities - Nexus Fork</h1>
+
+> **Note**: This is a fork of the original
+> [Aave Utilities](https://github.com/aave/aave-utilities) maintained by
+> [Protofire](https://protofire.io/) for Nexus protocol needs.
 
 The Aave Protocol is a decentralized non-custodial liquidity protocol where
 users can participate as suppliers or borrowers.
@@ -14,22 +34,12 @@ Aave Protocol, an upgrade to the existing
 
 ## Installation
 
-Aave utilities are available as npm packages:
-
-The [`@aave/math-utils`](https://www.npmjs.com/package/@aave/math-utils) package
-contains methods for formatting raw contract data for usage on a frontend
-
-The
-[`@aave/contract-helpers`](https://www.npmjs.com/package/@aave/contract-helpers)
-package contains methods for generating transactions based on method and
-parameter inputs. Can be used to read and write data on the protocol contracts.
+Install the Nexus forked helpers package:
 
 ```sh
-// with npm
-npm install @aave/contract-helpers @aave/math-utils
-
-// with yarn
-yarn add @aave/contract-helpers @aave/math-utils
+npm install @nexus/mm-contract-helpers
+# or
+yarn add @nexus/mm-contract-helpers
 ```
 
 <br />
@@ -47,388 +57,135 @@ npm install ethers@5
 
 <br />
 
+## Nexus Fork Changes
+
+This fork contains specific modifications for the Nexus protocol implementation:
+
+### Package Information
+
+- **Package Name**: `@nexus/mm-contract-helpers` (renamed from
+  `@aave/contract-helpers`)
+- **Repository**: `https://github.com/protofire/aave-utilities`
+- **Base Version**: Based on Aave utilities v1.30.2
+
+### Installation (Nexus Version)
+
+```sh
+// Install the Nexus version
+
+// Or with yarn
+```
+
+### Version History
+
+| Version             | Description          | Changes                                                      |
+| ------------------- | -------------------- | ------------------------------------------------------------ |
+| **v1.30.2**         | Base version         | Package renamed to `@nexus/mm-contract-helpers`              |
+| **v1.30.2-nexus.1** | Staking improvements | Limited approve for staking contracts instead of MAX_UINT256 |
+| **v1.30.2-nexus.2** | Pool enhancements    | RealAmount handling for pool contracts                       |
+| **v1.30.2-nexus.3** | Faucet improvements  | Added mint-all function for batch minting                    |
+
+### Key Modifications
+
+#### 1. Limited Approve for Staking Contracts
+
+- **Files**: `staking-contract/index.ts`, `v3-staking-contract/index.ts`
+- **Change**: Use limited approve amounts instead of MAX_UINT256 for better UX
+- **Impact**: Reduces approval amounts for staking operations
+
+#### 2. RealAmount Handling
+
+- **Files**: `lendingPool-contract/index.ts`, `v3-pool-contract/index.ts`,
+  `wethgateway-contract/index.ts`
+- **Change**: Implement realAmount logic for improved transaction accuracy
+- **Impact**: Better amount validation and transaction precision
+
+#### 3. Faucet Mint-All Function
+
+- **Files**: `faucet-contract/index.ts`, `faucet-contract/typechain/`
+- **Change**: Added mint-all function for batch minting of test tokens
+- **Impact**: Improved testing environment usability
+
+### Publishing
+
+To publish a new version:
+
+1. **Update version in package.json**:
+
+   ```bash
+   # Follow semver with nexus suffix
+   # Example: 1.30.2-nexus.4
+   ```
+
+2. **Build and publish**:
+
+   ```bash
+   cd packages/contract-helpers
+   npm run build
+   npm publish
+   ```
+
+3. **Create git tag**:
+   ```bash
+   git tag -a "v1.30.2-nexus.X" -m "Release description"
+   git push origin --tags
+   ```
+
+### Differences from Original
+
+- Package name changed to `@nexus/mm-contract-helpers`
+- Repository URLs updated to point to `protofire/aave-utilities`
+- Enhanced staking contract approval logic
+- Improved pool contract amount handling
+- Extended faucet functionality for testing
+
+<br />
+
 ## Features
 
-1.  [Data Methods](#data-methods)
-    - a. [Setup](#data-methods-setup)
-    - b. [Markets Data](#markets-data)
-    - b. [User Data](#user-data)
-2.  [Transaction Methods](#transaction-methods)
-    - a. [Setup](#transactions-setup)
-    - b. [Submitting Transactions](#submitting-transactions)
-    - c. [Pool V3](#pool-v3)
-      - [supplyBundle](#supplyBundle)
-      - [supply](#supply)
-      - [signERC20Approval](#signERC20Approval)
-      - [supplyWithPermit](#supply-with-permit)
-      - [borrow](<#borrow-(v3)>)
-      - [repay](<#repay-(v3)>)
-      - [repayWithPermit](#repayWithPermit)
-      - [repayWithATokens](#repayWithATokens)
-      - [withdraw](<#withdraw-(v3)>)
-      - [swapBorrowRateMode](<#swapBorrowRateMode-(v3)>)
-      - [setUsageAsCollateral](<#setUsageAsCollateral-(v3)>)
-      - [liquidationCall](<#liquidationCall-(v3)>)
-      - [swapCollateral](<#swapCollateral-(v3)>)
-      - [repayWithCollateral](<#repayWithCollateral-(v3)>)
-      - [setUserEMode](#setUserEMode)
-    - d. [Lending Pool V2](#lending-pool-v2)
-      - [depositBundle](#depositBundle)
-      - [deposit](#deposit)
-      - [borrow](#borrow)
-      - [repay](#repay)
-      - [withdraw](#withdraw)
-      - [swapBorrowRateMode](#swapBorrowRateMode)
-      - [setUsageAsCollateral](#setUsageAsCollateral)
-      - [liquidationCall](#liquidationCall)
-      - [swapCollateral](#swapCollateral)
-      - [repayWithCollateral](#repayWithCollateral)
-    - e. [Staking](#staking)
-      - [stake](#stake)
-      - [redeem](#redeem)
-      - [cooldown](#cooldown)
-      - [claimRewards](#claimRewards)
-    - f. [Governance](#governance)
-      - [create](#create)
-      - [cancel](#cancel)
-      - [queue](#queue)
-      - [execute](#execute)
-      - [submitVote](#submitVote)
-      - [delegate](#delegate)
-      - [delegateByType](#delegateByType)
-    - g. [Credit Delegation](#credit-delegation)
-      - [approveDelegation](#approveDelegation)
-    - h. [New Transaction Methods (experimental)](#new-transaction-methods)
-      - [supplyTxBuilder](#supplyTxBuilder)
-      - [depositTxBuilder](#depositTxBuilder)
-    - i. [Disclaimer]
-
-<br />
-
-# Data Methods
-
-The `@aave/contract-helpers` and `@aave/math-utils` packages are utilities to
-fetch and format smart contract data respectively. This section will guide you
-to setup and use these packages to query Aave Protocol data.
-
-<br />
-
-## Data Methods Setup
-
-After installing the aave-utilities packages, it's also recommended to add the
-[Aave Address Book](https://github.com/bgd-labs/aave-address-book#usage-with-node)
-package which will be used in the examples to import contract addresses
-directly.
-
-To initialize an instance of an `@aave/contract-helpers` service, an `ethers`
-provider is required to pass into the constructor.
-[ethers.js](https://docs.ethers.io/v5/) is a library for interacting with
-Ethereum and other EVM compatible blockchains, our `ethers` provider instance
-will serve as an RPC connection to read data from the blockchain.
-
-The two services which will be used for all data fetching methods are:
-
-- `UiPoolDataProvider`: Used for querying reserve and user data
-- `UiIncentiveDataProvider`: Used for querying reward emissions and user
-  claimable rewards
-
-The sample code below shows a complete example of initializing and using these
-services to query Aave protocol data.
-
-<details>
-	<summary>Sample Code</summary>
-
-```js
-import { ethers } from 'ethers';
-import {
-  UiPoolDataProvider,
-  UiIncentiveDataProvider,
-  ChainId,
-} from '@aave/contract-helpers';
-import * as markets from '@bgd-labs/aave-address-book';
-
-// ES5 Alternative imports
-//  const {
-//    ChainId,
-//    UiIncentiveDataProvider,
-//    UiPoolDataProvider,
-//  } = require('@aave/contract-helpers');
-//  const markets = require('@bgd-labs/aave-address-book');
-//  const ethers = require('ethers');
-
-// Sample RPC address for querying ETH mainnet
-const provider = new ethers.providers.JsonRpcProvider(
-  'https://eth-mainnet.public.blastapi.io',
-);
-
-// User address to fetch data for, insert address here
-const currentAccount = '0x464C71f6c2F760DdA6093dCB91C24c39e5d6e18c';
-
-// View contract used to fetch all reserves data (including market base currency data), and user reserves
-// Using Aave V3 Eth Mainnet address for demo
-const poolDataProviderContract = new UiPoolDataProvider({
-  uiPoolDataProviderAddress: markets.AaveV3Ethereum.UI_POOL_DATA_PROVIDER,
-  provider,
-  chainId: ChainId.mainnet,
-});
-
-// View contract used to fetch all reserve incentives (APRs), and user incentives
-// Using Aave V3 Eth Mainnet address for demo
-const incentiveDataProviderContract = new UiIncentiveDataProvider({
-  uiIncentiveDataProviderAddress:
-    markets.AaveV3Ethereum.UI_INCENTIVE_DATA_PROVIDER,
-  provider,
-  chainId: ChainId.mainnet,
-});
-
-async function fetchContractData() {
-  // Object containing array of pool reserves and market base currency data
-  // { reservesArray, baseCurrencyData }
-  const reserves = await poolDataProviderContract.getReservesHumanized({
-    lendingPoolAddressProvider: markets.AaveV3Ethereum.POOL_ADDRESSES_PROVIDER,
-  });
-
-  // Object containing array or users aave positions and active eMode category
-  // { userReserves, userEmodeCategoryId }
-  const userReserves = await poolDataProviderContract.getUserReservesHumanized({
-    lendingPoolAddressProvider: markets.AaveV3Ethereum.POOL_ADDRESSES_PROVIDER,
-    user: currentAccount,
-  });
-
-  // Array of incentive tokens with price feed and emission APR
-  const reserveIncentives =
-    await incentiveDataProviderContract.getReservesIncentivesDataHumanized({
-      lendingPoolAddressProvider:
-        markets.AaveV3Ethereum.POOL_ADDRESSES_PROVIDER,
-    });
-
-  // Dictionary of claimable user incentives
-  const userIncentives =
-    await incentiveDataProviderContract.getUserReservesIncentivesDataHumanized({
-      lendingPoolAddressProvider:
-        markets.AaveV3Ethereum.POOL_ADDRESSES_PROVIDER,
-      user: currentAccount,
-    });
-
-  console.log({ reserves, userReserves, reserveIncentives, userIncentives });
-}
-
-fetchContractData();
-```
-
-</details>
-
-<br />
-
-## Markets Data
-
-Once you have successfully completed the Setup instructions and are querying
-on-chain data, the next step is to format this data into human readable format
-and compute helpful values. This is done using the formatter functions in the
-`@aave/math-utils` package. There are two formatters for market data, one with
-incentives data, and one without. Examples for both methods are shown below.
-
-The output of these methods is an array of formatted reserve data for each
-reserve in an Aave market.
-
-<br />
-
-### formatReserves
-
-formatReserves returns an array of formatted configuration and live usage data
-for each reserve in an Aave market
-
-<details>
-  <summary>Sample Code</summary>
-
-```js
-import { formatReserves } from '@aave/math-utils';
-import dayjs from 'dayjs';
-
-// `reserves` variable here is input from Setup section
-
-const reservesArray = reserves.reservesData;
-const baseCurrencyData = reserves.baseCurrencyData;
-
-const currentTimestamp = dayjs().unix();
-
-/*
-- @param `reserves` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.reservesArray`
-- @param `currentTimestamp` Current UNIX timestamp in seconds
-- @param `marketReferencePriceInUsd` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferencePriceInUsd`
-- @param `marketReferenceCurrencyDecimals` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferenceCurrencyDecimals`
-*/
-const formattedPoolReserves = formatReserves({
-  reserves: reservesArray,
-  currentTimestamp,
-  marketReferenceCurrencyDecimals:
-    baseCurrencyData.marketReferenceCurrencyDecimals,
-  marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-});
-```
-
-</details>
-
-<br />
-
-### formatReservesAndIncentives
-
-formatReservesAndIncentives returns an array of formatted configuration and live
-usage data plus an object with supply, variable borrow, and stable borrow
-incentives for each reserve in an Aave market
-
-<details>
-  <summary>Sample Code</summary>
-
-```ts
-import { formatReservesAndIncentives } from '@aave/math-utils';
-import dayjs from 'dayjs';
-
-// 'reserves' and 'reserveIncentives' inputs from Fetching Protocol Data section
-
-const reservesArray = reserves.reservesData;
-const baseCurrencyData = reserves.baseCurrencyData;
-
-const currentTimestamp = dayjs().unix();
-
-/*
-- @param `reserves` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.reservesArray`
-- @param `currentTimestamp` Current UNIX timestamp in seconds, Math.floor(Date.now() / 1000)
-- @param `marketReferencePriceInUsd` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferencePriceInUsd`
-- @param `marketReferenceCurrencyDecimals` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferenceCurrencyDecimals`
-- @param `reserveIncentives` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserveIncentives`
-*/
-const formattedPoolReserves = formatReservesAndIncentives({
-  reserves: reservesArray,
-  currentTimestamp,
-  marketReferenceCurrencyDecimals:
-    baseCurrencyData.marketReferenceCurrencyDecimals,
-  marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-  reserveIncentives,
-});
-```
-
-</details>
-
-<br />
-
-## User Data
-
-Once you have successfully completed the Setup instructions and are querying
-on-chain data, the next step is to format this data into human readable format
-and compute cumulative user metrics. This is done using the formatter functions
-in the `@aave/math-utils` package. There are two formatters for user data, one
-with incentives data, and one without. Examples for both methods are shown
-below.
-
-The output of these methods is an object containing cumulative metrics
-(healthFactor, totalLiquidity, totalBorrows, etc.) and an array of formatted
-reserve data plus user holdings (aTokens, debtTokens) for each reserve in an
-Aave market.
-
-### formatUserSummary
-
-Returns formatted summary of Aave user portfolio including: array of holdings,
-total liquidity, total collateral, total borrows, liquidation threshold, health
-factor, and available borrowing power
-
-<details>
-  <summary>Sample Code</summary>
-
-```ts
-import { formatUserSummary } from '@aave/math-utils';
-import dayjs from 'dayjs';
-
-// 'reserves' and 'userReserves' inputs from Setup section
-
-const reservesArray = reserves.reservesData;
-const baseCurrencyData = reserves.baseCurrencyData;
-const userReservesArray = userReserves.userReserves;
-
-const currentTimestamp = dayjs().unix();
-
-const formattedReserves = formatReserves({
-  reserves: reservesArray,
-  currentTimestamp,
-  marketReferenceCurrencyDecimals:
-    baseCurrencyData.marketReferenceCurrencyDecimals,
-  marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-});
-
-/*
-- @param `currentTimestamp` Current UNIX timestamp in seconds, Math.floor(Date.now() / 1000)
-- @param `marketReferencePriceInUsd` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferencePriceInUsd`
-- @param `marketReferenceCurrencyDecimals` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferenceCurrencyDecimals`
-- @param `userReserves` Input from [Fetching Protocol Data](#fetching-protocol-data), combination of `userReserves.userReserves` and `reserves.reservesArray`
-- @param `userEmodeCategoryId` Input from [Fetching Protocol Data](#fetching-protocol-data), `userReserves.userEmodeCategoryId`
-*/
-const userSummary = formatUserSummary({
-  currentTimestamp,
-  marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-  marketReferenceCurrencyDecimals:
-    baseCurrencyData.marketReferenceCurrencyDecimals,
-  userReserves: userReservesArray,
-  formattedReserves,
-  userEmodeCategoryId: userReserves.userEmodeCategoryId,
-});
-```
-
-</details>
-
-<br />
-
-### formatUserSummaryAndIncentives
-
-Returns formatted summary of Aave user portfolio including: array of holdings,
-total liquidity, total collateral, total borrows, liquidation threshold, health
-factor, available borrowing power, and dictionary of claimable incentives
-
-<details>
-  <summary>Sample Code</summary>
-
-```ts
-import { formatUserSummaryAndIncentives } from '@aave/math-utils';
-import dayjs from 'dayjs';
-
-// 'reserves', 'userReserves', 'reserveIncentives', and 'userIncentives' inputs from Setup section
-
-const reservesArray = reserves.reservesData;
-const baseCurrencyData = reserves.baseCurrencyData;
-const userReservesArray = userReserves.userReserves;
-
-const currentTimestamp = dayjs().unix();
-
-const formattedReserves = formatReserves({
-  reserves: reservesArray,
-  currentTimestamp,
-  marketReferenceCurrencyDecimals:
-    baseCurrencyData.marketReferenceCurrencyDecimals,
-  marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-});
-
-/*
-- @param `currentTimestamp` Current UNIX timestamp in seconds, Math.floor(Date.now() / 1000)
-- @param `marketReferencePriceInUsd` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferencePriceInUsd`
-- @param `marketReferenceCurrencyDecimals` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserves.baseCurrencyData.marketReferenceCurrencyDecimals`
-- @param `userReserves` Input from [Fetching Protocol Data](#fetching-protocol-data), combination of `userReserves.userReserves` and `reserves.reservesArray`
-- @param `userEmodeCategoryId` Input from [Fetching Protocol Data](#fetching-protocol-data), `userReserves.userEmodeCategoryId`
-- @param `reserveIncentives` Input from [Fetching Protocol Data](#fetching-protocol-data), `reserveIncentives`
-- @param `userIncentives` Input from [Fetching Protocol Data](#fetching-protocol-data), `userIncentives`
-*/
-const userSummary = formatUserSummaryAndIncentives({
-  currentTimestamp,
-  marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-  marketReferenceCurrencyDecimals:
-    baseCurrencyData.marketReferenceCurrencyDecimals,
-  userReserves: userReservesArray,
-  formattedReserves,
-  userEmodeCategoryId: userReserves.userEmodeCategoryId,
-  reserveIncentives,
-  userIncentives,
-});
-```
-
-</details>
+- [Transaction Methods](#transaction-methods)
+  - [Transactions Setup](#transactions-setup)
+  - [Submitting Transactions](#submitting-transactions)
+  - [Pool V3](#pool-v3)
+    - [supplyBundle](#supplybundle)
+    - [signERC20Approval](#signerc20approval)
+    - [supplyWithPermit](#supplywithpermit)
+    - [borrow (V3)](#borrow-v3)
+    - [repay (V3)](#repay-v3)
+    - [repayWithPermit](#repaywithpermit)
+    - [repayWithATokens](#repaywithatokens)
+    - [withdraw (V3)](#withdraw-v3)
+    - [swapBorrowRateMode (V3)](#swapborrowratemode-v3)
+    - [setUsageAsCollateral (V3)](#setusageascollateral-v3)
+    - [liquidationCall (V3)](#liquidationcall-v3)
+    - [swapCollateral (V3)](#swapcollateral-v3)
+    - [repayWithCollateral (V3)](#repaywithcollateral-v3)
+    - [setUserEMode](#setuseremode)
+  - [Lending Pool V2](#lending-pool-v2)
+    - [depositBundle](#depositbundle)
+    - [borrow](#borrow)
+    - [repay](#repay)
+    - [withdraw](#withdraw)
+    - [swapBorrowRateMode](#swapborrowratemode)
+    - [setUsageAsCollateral](#setusageascollateral)
+    - [liquidationCall](#liquidationcall)
+    - [swapCollateral](#swapcollateral)
+    - [repayWithCollateral](#repaywithcollateral)
+  - [Governance V2](#governance-v2)
+    - [create](#create)
+    - [cancel](#cancel)
+    - [queue](#queue)
+    - [execute](#execute)
+    - [submitVote](#submitvote)
+    - [delegate](#delegate)
+    - [delegateByType](#delegatebytype)
+  - [Faucets](#faucets)
+    - [mint](#mint)
+  - [Credit Delegation](#credit-delegation)
+    - [approveDelegation](#approvedelegation)
+  - [New Transaction Methods](#new-transaction-methods)
+    - [Setup](#setup)
+    - [Samples](#samples)
 
 <br />
 
