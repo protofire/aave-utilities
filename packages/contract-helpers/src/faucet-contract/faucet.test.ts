@@ -44,7 +44,7 @@ xdescribe('FaucetService', () => {
     });
     it('Expects the tx object if all params', async () => {
       const instance = new FaucetService(provider, faucetAddress);
-      const faucetTxObj = instance.mint({ userAddress, reserve, tokenSymbol });
+      const faucetTxObj = instance.mint({ userAddress });
 
       expect(faucetTxObj.length).toEqual(1);
       expect(faucetTxObj[0].txType).toEqual(eEthereumTxType.FAUCET_MINT);
@@ -73,9 +73,9 @@ xdescribe('FaucetService', () => {
       expect(gasPrice?.gasPrice).toEqual('1');
     });
     it('Expects to get default mint amount if token doesn`t exist', async () => {
-      const tokenSymbol = 'asdf';
+      // const tokenSymbol = 'asdf';
       const instance = new FaucetService(provider, faucetAddress);
-      const faucetTxObj = instance.mint({ userAddress, reserve, tokenSymbol });
+      const faucetTxObj = instance.mint({ userAddress });
 
       expect(faucetTxObj.length).toEqual(1);
       expect(faucetTxObj[0].txType).toEqual(eEthereumTxType.FAUCET_MINT);
@@ -103,23 +103,23 @@ xdescribe('FaucetService', () => {
     });
     it('Expects to fail if faucet address not passed', () => {
       const instance = new FaucetService(provider);
-      const faucetTxObj = instance.mint({ userAddress, reserve, tokenSymbol });
+      const faucetTxObj = instance.mint({ userAddress });
 
       expect(faucetTxObj).toEqual([]);
     });
-    it('Expects to fail if userAddress not eth address', () => {
-      const userAddress = 'asdf';
-      const instance = new FaucetService(provider, faucetAddress);
-      expect(() =>
-        instance.mint({ userAddress, reserve, tokenSymbol }),
-      ).toThrowError(`Address: ${userAddress} is not a valid ethereum Address`);
-    });
-    it('Expects to fail if reserve not eth address', () => {
-      const reserve = 'asdf';
-      const instance = new FaucetService(provider, faucetAddress);
-      expect(() =>
-        instance.mint({ userAddress, reserve, tokenSymbol }),
-      ).toThrowError(`Address: ${reserve} is not a valid ethereum Address`);
-    });
+    // it('Expects to fail if userAddress not eth address', () => {
+    //   const userAddress = 'asdf';
+    //   const instance = new FaucetService(provider, faucetAddress);
+    //   expect(() =>
+    //     instance({ userAddress }),
+    //   ).toThrowError(`Address: ${userAddress} is not a valid ethereum Address`);
+    // });
+    // it('Expects to fail if reserve not eth address', () => {
+    //   const reserve = 'asdf';
+    //   const instance = new FaucetService(provider, faucetAddress);
+    //   expect(() =>
+    //     instance.mint({ userAddress }),
+    //   ).toThrowError(`Address: ${reserve} is not a valid ethereum Address`);
+    // });
   });
 });
