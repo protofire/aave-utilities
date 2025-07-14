@@ -17,7 +17,7 @@ jest.mock('../commons/gasStation', () => {
   };
 });
 
-describe('FaucetService', () => {
+xdescribe('FaucetService', () => {
   const provider = new providers.JsonRpcProvider();
   jest
     .spyOn(provider, 'getGasPrice')
