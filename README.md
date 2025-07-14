@@ -1,6 +1,10 @@
 <p align="center"> <a href="https://aave.com/" rel="noopener" target="_blank"><img width="300" src="https://aave.com/governanceGhosts.svg" alt="Aave logo"></a></p>
 
-<h1 align="center">Aave Utilities</h1>
+<h1 align="center">Aave Utilities - Nexus Fork</h1>
+
+> **Note**: This is a fork of the original
+> [Aave Utilities](https://github.com/aave/aave-utilities) maintained by
+> [Protofire](https://protofire.io/) for Nexus protocol needs.
 
 The Aave Protocol is a decentralized non-custodial liquidity protocol where
 users can participate as suppliers or borrowers.
@@ -47,61 +51,145 @@ npm install ethers@5
 
 <br />
 
+## Nexus Fork Changes
+
+This fork contains specific modifications for the Nexus protocol implementation:
+
+### Package Information
+
+- **Package Name**: `@nexus/mm-contract-helpers` (renamed from
+  `@aave/contract-helpers`)
+- **Repository**: `https://github.com/protofire/aave-utilities`
+- **Base Version**: Based on Aave utilities v1.30.2
+
+### Installation (Nexus Version)
+
+```sh
+// Install the Nexus version
+npm install @nexus/mm-contract-helpers @aave/math-utils
+
+// Or with yarn
+yarn add @nexus/mm-contract-helpers @aave/math-utils
+```
+
+### Version History
+
+| Version             | Description          | Changes                                                      |
+| ------------------- | -------------------- | ------------------------------------------------------------ |
+| **v1.30.2**         | Base version         | Package renamed to `@nexus/mm-contract-helpers`              |
+| **v1.30.2-nexus.1** | Staking improvements | Limited approve for staking contracts instead of MAX_UINT256 |
+| **v1.30.2-nexus.2** | Pool enhancements    | RealAmount handling for pool contracts                       |
+| **v1.30.2-nexus.3** | Faucet improvements  | Added mint-all function for batch minting                    |
+
+### Key Modifications
+
+#### 1. Limited Approve for Staking Contracts
+
+- **Files**: `staking-contract/index.ts`, `v3-staking-contract/index.ts`
+- **Change**: Use limited approve amounts instead of MAX_UINT256 for better UX
+- **Impact**: Reduces approval amounts for staking operations
+
+#### 2. RealAmount Handling
+
+- **Files**: `lendingPool-contract/index.ts`, `v3-pool-contract/index.ts`,
+  `wethgateway-contract/index.ts`
+- **Change**: Implement realAmount logic for improved transaction accuracy
+- **Impact**: Better amount validation and transaction precision
+
+#### 3. Faucet Mint-All Function
+
+- **Files**: `faucet-contract/index.ts`, `faucet-contract/typechain/`
+- **Change**: Added mint-all function for batch minting of test tokens
+- **Impact**: Improved testing environment usability
+
+### Publishing
+
+To publish a new version:
+
+1. **Update version in package.json**:
+
+   ```bash
+   # Follow semver with nexus suffix
+   # Example: 1.30.2-nexus.4
+   ```
+
+2. **Build and publish**:
+
+   ```bash
+   cd packages/contract-helpers
+   npm run build
+   npm publish
+   ```
+
+3. **Create git tag**:
+   ```bash
+   git tag -a "v1.30.2-nexus.X" -m "Release description"
+   git push origin --tags
+   ```
+
+### Differences from Original
+
+- Package name changed to `@nexus/mm-contract-helpers`
+- Repository URLs updated to point to `protofire/aave-utilities`
+- Enhanced staking contract approval logic
+- Improved pool contract amount handling
+- Extended faucet functionality for testing
+
+<br />
+
 ## Features
 
-1.  [Data Methods](#data-methods)
-    - a. [Setup](#data-methods-setup)
-    - b. [Markets Data](#markets-data)
-    - b. [User Data](#user-data)
-2.  [Transaction Methods](#transaction-methods)
-    - a. [Setup](#transactions-setup)
-    - b. [Submitting Transactions](#submitting-transactions)
-    - c. [Pool V3](#pool-v3)
-      - [supplyBundle](#supplyBundle)
-      - [supply](#supply)
-      - [signERC20Approval](#signERC20Approval)
-      - [supplyWithPermit](#supply-with-permit)
-      - [borrow](<#borrow-(v3)>)
-      - [repay](<#repay-(v3)>)
-      - [repayWithPermit](#repayWithPermit)
-      - [repayWithATokens](#repayWithATokens)
-      - [withdraw](<#withdraw-(v3)>)
-      - [swapBorrowRateMode](<#swapBorrowRateMode-(v3)>)
-      - [setUsageAsCollateral](<#setUsageAsCollateral-(v3)>)
-      - [liquidationCall](<#liquidationCall-(v3)>)
-      - [swapCollateral](<#swapCollateral-(v3)>)
-      - [repayWithCollateral](<#repayWithCollateral-(v3)>)
-      - [setUserEMode](#setUserEMode)
-    - d. [Lending Pool V2](#lending-pool-v2)
-      - [depositBundle](#depositBundle)
-      - [deposit](#deposit)
-      - [borrow](#borrow)
-      - [repay](#repay)
-      - [withdraw](#withdraw)
-      - [swapBorrowRateMode](#swapBorrowRateMode)
-      - [setUsageAsCollateral](#setUsageAsCollateral)
-      - [liquidationCall](#liquidationCall)
-      - [swapCollateral](#swapCollateral)
-      - [repayWithCollateral](#repayWithCollateral)
-    - e. [Staking](#staking)
-      - [stake](#stake)
-      - [redeem](#redeem)
-      - [cooldown](#cooldown)
-      - [claimRewards](#claimRewards)
-    - f. [Governance](#governance)
-      - [create](#create)
-      - [cancel](#cancel)
-      - [queue](#queue)
-      - [execute](#execute)
-      - [submitVote](#submitVote)
-      - [delegate](#delegate)
-      - [delegateByType](#delegateByType)
-    - g. [Credit Delegation](#credit-delegation)
-      - [approveDelegation](#approveDelegation)
-    - h. [New Transaction Methods (experimental)](#new-transaction-methods)
-      - [supplyTxBuilder](#supplyTxBuilder)
-      - [depositTxBuilder](#depositTxBuilder)
-    - i. [Disclaimer]
+- [Data Methods](#data-methods)
+  - [Data Methods Setup](#data-methods-setup)
+  - [Markets Data](#markets-data)
+    - [formatReserves](#formatreserves)
+    - [formatReservesAndIncentives](#formatreservesandincentives)
+  - [User Data](#user-data)
+    - [formatUserSummary](#formatusersummary)
+    - [formatUserSummaryAndIncentives](#formatusersummaryandincentives)
+- [Transaction Methods](#transaction-methods)
+  - [Transactions Setup](#transactions-setup)
+  - [Submitting Transactions](#submitting-transactions)
+  - [Pool V3](#pool-v3)
+    - [supplyBundle](#supplybundle)
+    - [signERC20Approval](#signerc20approval)
+    - [supplyWithPermit](#supplywithpermit)
+    - [borrow (V3)](#borrow-v3)
+    - [repay (V3)](#repay-v3)
+    - [repayWithPermit](#repaywithpermit)
+    - [repayWithATokens](#repaywithatokens)
+    - [withdraw (V3)](#withdraw-v3)
+    - [swapBorrowRateMode (V3)](#swapborrowratemode-v3)
+    - [setUsageAsCollateral (V3)](#setusageascollateral-v3)
+    - [liquidationCall (V3)](#liquidationcall-v3)
+    - [swapCollateral (V3)](#swapcollateral-v3)
+    - [repayWithCollateral (V3)](#repaywithcollateral-v3)
+    - [setUserEMode](#setuseremode)
+  - [Lending Pool V2](#lending-pool-v2)
+    - [depositBundle](#depositbundle)
+    - [borrow](#borrow)
+    - [repay](#repay)
+    - [withdraw](#withdraw)
+    - [swapBorrowRateMode](#swapborrowratemode)
+    - [setUsageAsCollateral](#setusageascollateral)
+    - [liquidationCall](#liquidationcall)
+    - [swapCollateral](#swapcollateral)
+    - [repayWithCollateral](#repaywithcollateral)
+  - [Governance V2](#governance-v2)
+    - [create](#create)
+    - [cancel](#cancel)
+    - [queue](#queue)
+    - [execute](#execute)
+    - [submitVote](#submitvote)
+    - [delegate](#delegate)
+    - [delegateByType](#delegatebytype)
+  - [Faucets](#faucets)
+    - [mint](#mint)
+  - [Credit Delegation](#credit-delegation)
+    - [approveDelegation](#approvedelegation)
+  - [New Transaction Methods](#new-transaction-methods)
+    - [Setup](#setup)
+    - [Samples](#samples)
 
 <br />
 
