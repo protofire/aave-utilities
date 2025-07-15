@@ -116,3 +116,86 @@ also in the package.json paste these in:
 
 That's it. Now start writing your logic. You must write your typescript code in
 the `src` folder in your package.
+
+## Publishing to Verdaccio (Local npm Registry)
+
+This section explains how to build and publish a package (e.g.,
+`@nexus/mm-contract-helpers`) to a local Verdaccio registry for
+development/testing purposes.
+
+### Prerequisites
+
+- Verdaccio installed globally (`npm install -g verdaccio`) or via npx
+- Node.js version matching your project (check `.nvmrc`)
+- All dependencies installed (`yarn install --frozen-lockfile`)
+
+### 1. Start Verdaccio
+
+```bash
+npx verdaccio
+# or, if installed globally
+verdaccio
+```
+
+By default, Verdaccio runs at http://localhost:4873
+
+### 2. Configure npm/yarn to use Verdaccio
+
+Edit (or create) a `.npmrc` file in your project root with:
+
+```
+registry=http://localhost:4873
+```
+
+Or run:
+
+```bash
+npm set registry http://localhost:4873
+```
+
+### 3. Authenticate with Verdaccio
+
+You must be logged in to publish packages:
+
+```bash
+npm adduser --registry http://localhost:4873
+# Enter any username, password, and email (they are local)
+```
+
+### 4. Build the package
+
+From the monorepo root or the package folder:
+
+```bash
+# Build all packages
+yarn build
+# Or build a specific package
+cd packages/contract-helpers
+yarn build
+```
+
+### 5. Publish the package to Verdaccio
+
+From the package directory:
+
+```bash
+cd packages/contract-helpers
+npm publish --registry http://localhost:4873
+```
+
+### 6. Install the package from Verdaccio (in another project)
+
+```bash
+npm install @nexus/mm-contract-helpers --registry http://localhost:4873
+```
+
+### 7. Troubleshooting
+
+- If you see `ECONNREFUSED`, ensure Verdaccio is running and you are using the
+  correct Node version.
+- If you see missing peer dependencies, install them in your workspace root or
+  the package folder.
+- To reset your environment, restore `yarn.lock` and run
+  `yarn install --frozen-lockfile` with the registry set to npmjs.
+
+---
