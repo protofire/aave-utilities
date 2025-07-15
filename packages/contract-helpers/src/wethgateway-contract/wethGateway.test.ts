@@ -800,6 +800,7 @@ describe('WethGatewayService', () => {
         lendingPool,
         user,
         amount,
+        realAmount: amount,
         onBehalfOf,
         aTokenAddress,
       });
@@ -844,6 +845,7 @@ describe('WethGatewayService', () => {
         lendingPool,
         user,
         amount,
+        realAmount: '1', // cualquier valor positivo válido
         onBehalfOf,
         aTokenAddress,
       });
@@ -887,6 +889,7 @@ describe('WethGatewayService', () => {
         lendingPool,
         user,
         amount,
+        realAmount: amount,
         aTokenAddress,
       });
 
@@ -921,6 +924,7 @@ describe('WethGatewayService', () => {
         lendingPool,
         user,
         amount,
+        realAmount: amount,
         aTokenAddress,
       });
 
@@ -938,6 +942,7 @@ describe('WethGatewayService', () => {
           lendingPool,
           user,
           amount,
+          realAmount: amount,
           aTokenAddress,
         }),
       ).rejects.toThrowError(
@@ -956,6 +961,7 @@ describe('WethGatewayService', () => {
           lendingPool,
           user,
           amount,
+          realAmount: amount,
           aTokenAddress,
         }),
       ).rejects.toThrowError(
@@ -974,6 +980,7 @@ describe('WethGatewayService', () => {
           lendingPool,
           user,
           amount,
+          realAmount: amount,
           aTokenAddress,
         }),
       ).rejects.toThrowError(`Amount: ${amount} needs to be greater than 0`);
@@ -990,6 +997,7 @@ describe('WethGatewayService', () => {
           lendingPool,
           user,
           amount,
+          realAmount: amount,
           aTokenAddress,
         }),
       ).rejects.toThrowError(`Amount: ${amount} needs to be greater than 0`);
@@ -1006,6 +1014,7 @@ describe('WethGatewayService', () => {
           lendingPool,
           user,
           amount,
+          realAmount: amount,
           aTokenAddress,
         }),
       ).rejects.toThrowError(
@@ -1024,6 +1033,7 @@ describe('WethGatewayService', () => {
           lendingPool,
           user,
           amount,
+          realAmount: amount,
           aTokenAddress,
           onBehalfOf,
         }),

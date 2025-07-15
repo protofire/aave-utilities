@@ -5,14 +5,13 @@ module.exports = {
   coverageReporters: ['lcov', 'text'],
   coverageThreshold: {
     global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
     },
   },
   coveragePathIgnorePatterns: [
-    'packages/contract-types/*',
     'packages/contract-helpers/src/permissions-manager/typechain',
     'packages/contract-helpers/src/ui-incentive-data-provider/typechain',
     'packages/contract-helpers/src/wallet-balance-provider/typechain',

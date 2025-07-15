@@ -1,18 +1,17 @@
+import { providers } from 'ethers';
 import { isAddress } from 'ethers/lib/utils';
-import { ReservesHelperInput, UserReservesHelperInput } from '../index';
+import { UiPoolDataProvider as UiPoolDataProviderContract } from './typechain/UiPoolDataProvider';
+import { UiPoolDataProviderFactory } from './typechain/UiPoolDataProviderFactory';
 import {
+  ReservesData,
+  UserReserveData,
   PoolBaseCurrencyHumanized,
   ReserveDataHumanized,
   ReservesDataHumanized,
-  UiPoolDataProviderContext,
-  UserReserveData,
   UserReserveDataHumanized,
-} from '../v3-UiPoolDataProvider-contract';
-import { IUiPoolDataProviderV3 as UiPoolDataProviderContract } from './typechain/IUiPoolDataProviderV3';
-import { IUiPoolDataProviderV3__factory } from './typechain/IUiPoolDataProviderV3__factory';
-import { LegacyReservesData } from './types';
+} from './types/UiPoolDataProviderTypes';
 
-export * from './types';
+export * from './types/UiPoolDataProviderTypes';
 
 const ammSymbolMap: Record<string, string> = {
   '0xae461ca67b15dc8dc81ce7615e0320da1a9ab8d5': 'UNIDAIUSDC',
@@ -33,28 +32,31 @@ const ammSymbolMap: Record<string, string> = {
   '0x59a19d8c652fa0284f44113d0ff9aba70bd46fb4': 'BPTBALWETH',
 };
 
-export interface LegacyUiPoolDataProviderInterface {
-  getReservesList: (args: ReservesHelperInput) => Promise<string[]>;
-  getReservesData: (args: ReservesHelperInput) => Promise<LegacyReservesData>;
-  getUserReservesData: (
-    args: UserReservesHelperInput,
-  ) => Promise<UserReserveData>;
-  getReservesHumanized: (
-    args: ReservesHelperInput,
-  ) => Promise<ReservesDataHumanized>;
-  getUserReservesHumanized: (args: UserReservesHelperInput) => Promise<{
-    userReserves: UserReserveDataHumanized[];
-    userEmodeCategoryId: number;
-  }>;
+export interface UiPoolDataProviderContext {
+  uiPoolDataProviderAddress: string;
+  provider: providers.Provider;
+  chainId: number;
 }
 
-/**
- * This class is only intended to be used with v2 markets
- * or v3 markets that do not have the v3.1 upgrade applied
- */
-export class LegacyUiPoolDataProvider
-  implements LegacyUiPoolDataProviderInterface
-{
+export interface UiPoolDataProviderInterface {
+  getReservesList: (lendingPoolAddressProvider: string) => Promise<string[]>;
+  getReservesData: (
+    lendingPoolAddressProvider: string,
+  ) => Promise<ReservesData>;
+  getUserReservesData: (
+    lendingPoolAddressProvider: string,
+    user: string,
+  ) => Promise<UserReserveData[]>;
+  getReservesHumanized: (
+    lendingPoolAddressProvider: string,
+  ) => Promise<ReservesDataHumanized>;
+  getUserReservesHumanized: (
+    lendingPoolAddressProvider: string,
+    user: string,
+  ) => Promise<UserReserveDataHumanized[]>;
+}
+
+export class UiPoolDataProvider implements UiPoolDataProviderInterface {
   private readonly _contract: UiPoolDataProviderContract;
 
   private readonly chainId: number;
@@ -67,7 +69,7 @@ export class LegacyUiPoolDataProvider
       throw new Error('contract address is not valid');
     }
 
-    this._contract = IUiPoolDataProviderV3__factory.connect(
+    this._contract = UiPoolDataProviderFactory.connect(
       context.uiPoolDataProviderAddress,
       context.provider,
     );
@@ -77,9 +79,9 @@ export class LegacyUiPoolDataProvider
   /**
    * Get the underlying asset address for each lending pool reserve
    */
-  public async getReservesList({
-    lendingPoolAddressProvider,
-  }: ReservesHelperInput): Promise<string[]> {
+  public async getReservesList(
+    lendingPoolAddressProvider: string,
+  ): Promise<string[]> {
     if (!isAddress(lendingPoolAddressProvider)) {
       throw new Error('Lending pool address is not valid');
     }
@@ -90,9 +92,9 @@ export class LegacyUiPoolDataProvider
   /**
    * Get data for each lending pool reserve
    */
-  public async getReservesData({
-    lendingPoolAddressProvider,
-  }: ReservesHelperInput): Promise<LegacyReservesData> {
+  public async getReservesData(
+    lendingPoolAddressProvider: string,
+  ): Promise<ReservesData> {
     if (!isAddress(lendingPoolAddressProvider)) {
       throw new Error('Lending pool address is not valid');
     }
@@ -103,10 +105,10 @@ export class LegacyUiPoolDataProvider
   /**
    * Get data for each user reserve on the lending pool
    */
-  public async getUserReservesData({
-    lendingPoolAddressProvider,
-    user,
-  }: UserReservesHelperInput): Promise<UserReserveData> {
+  public async getUserReservesData(
+    lendingPoolAddressProvider: string,
+    user: string,
+  ): Promise<UserReserveData[]> {
     if (!isAddress(lendingPoolAddressProvider)) {
       throw new Error('Lending pool address is not valid');
     }
@@ -118,11 +120,11 @@ export class LegacyUiPoolDataProvider
     return this._contract.getUserReservesData(lendingPoolAddressProvider, user);
   }
 
-  public async getReservesHumanized({
-    lendingPoolAddressProvider,
-  }: ReservesHelperInput): Promise<ReservesDataHumanized> {
-    const { 0: reservesRaw, 1: poolBaseCurrencyRaw }: LegacyReservesData =
-      await this.getReservesData({ lendingPoolAddressProvider });
+  public async getReservesHumanized(
+    lendingPoolAddressProvider: string,
+  ): Promise<ReservesDataHumanized> {
+    const { 0: reservesRaw, 1: poolBaseCurrencyRaw }: ReservesData =
+      await this.getReservesData(lendingPoolAddressProvider);
 
     const reservesData: ReserveDataHumanized[] = reservesRaw.map(
       reserveRaw => ({
@@ -164,34 +166,10 @@ export class LegacyUiPoolDataProvider
         totalScaledVariableDebt: reserveRaw.totalScaledVariableDebt.toString(),
         priceInMarketReferenceCurrency:
           reserveRaw.priceInMarketReferenceCurrency.toString(),
-        priceOracle: reserveRaw.priceOracle,
         variableRateSlope1: reserveRaw.variableRateSlope1.toString(),
         variableRateSlope2: reserveRaw.variableRateSlope2.toString(),
         stableRateSlope1: reserveRaw.stableRateSlope1.toString(),
         stableRateSlope2: reserveRaw.stableRateSlope2.toString(),
-        baseStableBorrowRate: reserveRaw.baseStableBorrowRate.toString(),
-        baseVariableBorrowRate: reserveRaw.baseVariableBorrowRate.toString(),
-        optimalUsageRatio: reserveRaw.optimalUsageRatio.toString(),
-        // new fields
-        isPaused: reserveRaw.isPaused,
-        debtCeiling: reserveRaw.debtCeiling.toString(),
-        eModeCategoryId: reserveRaw.eModeCategoryId,
-        borrowCap: reserveRaw.borrowCap.toString(),
-        supplyCap: reserveRaw.supplyCap.toString(),
-        eModeLtv: reserveRaw.eModeLtv,
-        eModeLiquidationThreshold: reserveRaw.eModeLiquidationThreshold,
-        eModeLiquidationBonus: reserveRaw.eModeLiquidationBonus,
-        eModePriceSource: reserveRaw.eModePriceSource.toString(),
-        eModeLabel: reserveRaw.eModeLabel.toString(),
-        borrowableInIsolation: reserveRaw.borrowableInIsolation,
-        accruedToTreasury: reserveRaw.accruedToTreasury.toString(),
-        unbacked: reserveRaw.unbacked.toString(),
-        isolationModeTotalDebt: reserveRaw.isolationModeTotalDebt.toString(),
-        debtCeilingDecimals: reserveRaw.debtCeilingDecimals.toNumber(),
-        isSiloedBorrowing: reserveRaw.isSiloedBorrowing,
-        flashLoanEnabled: reserveRaw.flashLoanEnabled,
-        virtualAccActive: false,
-        virtualUnderlyingBalance: '0',
       }),
     );
 
@@ -213,30 +191,26 @@ export class LegacyUiPoolDataProvider
     };
   }
 
-  public async getUserReservesHumanized({
-    lendingPoolAddressProvider,
-    user,
-  }: UserReservesHelperInput): Promise<{
-    userReserves: UserReserveDataHumanized[];
-    userEmodeCategoryId: number;
-  }> {
-    const { 0: userReservesRaw, 1: userEmodeCategoryId }: UserReserveData =
-      await this.getUserReservesData({ lendingPoolAddressProvider, user });
+  public async getUserReservesHumanized(
+    lendingPoolAddressProvider: string,
+    user: string,
+  ): Promise<UserReserveDataHumanized[]> {
+    const userReservesRaw: UserReserveData[] = await this.getUserReservesData(
+      lendingPoolAddressProvider,
+      user,
+    );
 
-    return {
-      userReserves: userReservesRaw.map(userReserveRaw => ({
-        id: `${this.chainId}-${user}-${userReserveRaw.underlyingAsset}-${lendingPoolAddressProvider}`.toLowerCase(),
-        underlyingAsset: userReserveRaw.underlyingAsset.toLowerCase(),
-        scaledATokenBalance: userReserveRaw.scaledATokenBalance.toString(),
-        usageAsCollateralEnabledOnUser:
-          userReserveRaw.usageAsCollateralEnabledOnUser,
-        stableBorrowRate: userReserveRaw.stableBorrowRate.toString(),
-        scaledVariableDebt: userReserveRaw.scaledVariableDebt.toString(),
-        principalStableDebt: userReserveRaw.principalStableDebt.toString(),
-        stableBorrowLastUpdateTimestamp:
-          userReserveRaw.stableBorrowLastUpdateTimestamp.toNumber(),
-      })),
-      userEmodeCategoryId,
-    };
+    return userReservesRaw.map((userReserveRaw: UserReserveData) => ({
+      id: `${this.chainId}-${user}-${userReserveRaw.underlyingAsset}-${lendingPoolAddressProvider}`.toLowerCase(),
+      underlyingAsset: userReserveRaw.underlyingAsset.toLowerCase(),
+      scaledATokenBalance: userReserveRaw.scaledATokenBalance.toString(),
+      usageAsCollateralEnabledOnUser:
+        userReserveRaw.usageAsCollateralEnabledOnUser,
+      stableBorrowRate: userReserveRaw.stableBorrowRate.toString(),
+      scaledVariableDebt: userReserveRaw.scaledVariableDebt.toString(),
+      principalStableDebt: userReserveRaw.principalStableDebt.toString(),
+      stableBorrowLastUpdateTimestamp:
+        userReserveRaw.stableBorrowLastUpdateTimestamp.toNumber(),
+    }));
   }
 }

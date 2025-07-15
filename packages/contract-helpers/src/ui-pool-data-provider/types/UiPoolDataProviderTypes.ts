@@ -31,53 +31,71 @@ export interface ReservesData {
     stableDebtLastUpdateTimestamp: BigNumber;
     totalScaledVariableDebt: BigNumber;
     priceInMarketReferenceCurrency: BigNumber;
-    priceOracle: string;
     variableRateSlope1: BigNumber;
     variableRateSlope2: BigNumber;
     stableRateSlope1: BigNumber;
     stableRateSlope2: BigNumber;
-    baseStableBorrowRate: BigNumber;
-    baseVariableBorrowRate: BigNumber;
-    optimalUsageRatio: BigNumber;
-    isPaused: boolean;
-    isSiloedBorrowing: boolean;
-    accruedToTreasury: BigNumber;
-    unbacked: BigNumber;
-    isolationModeTotalDebt: BigNumber;
-    debtCeiling: BigNumber;
-    debtCeilingDecimals: BigNumber;
-    eModeCategoryId: number;
-    borrowCap: BigNumber;
-    supplyCap: BigNumber;
-    eModeLtv: number;
-    eModeLiquidationThreshold: number;
-    eModeLiquidationBonus: number;
-    eModePriceSource: string;
-    eModeLabel: string;
-    borrowableInIsolation: boolean;
-    flashLoanEnabled: boolean;
-    virtualAccActive: boolean;
-    virtualUnderlyingBalance: BigNumber;
+    0: string;
+    1: string;
+    2: string;
+    3: BigNumber;
+    4: BigNumber;
+    5: BigNumber;
+    6: BigNumber;
+    7: BigNumber;
+    8: boolean;
+    9: boolean;
+    10: boolean;
+    11: boolean;
+    12: boolean;
+    13: BigNumber;
+    14: BigNumber;
+    15: BigNumber;
+    16: BigNumber;
+    17: BigNumber;
+    18: number;
+    19: string;
+    20: string;
+    21: string;
+    22: string;
+    23: BigNumber;
+    24: BigNumber;
+    25: BigNumber;
+    26: BigNumber;
+    27: BigNumber;
+    28: BigNumber;
+    29: BigNumber;
+    30: BigNumber;
+    31: BigNumber;
+    32: BigNumber;
   }>;
   1: {
     marketReferenceCurrencyUnit: BigNumber;
     marketReferenceCurrencyPriceInUsd: BigNumber;
     networkBaseTokenPriceInUsd: BigNumber;
     networkBaseTokenPriceDecimals: number;
+    0: BigNumber;
+    1: BigNumber;
+    2: BigNumber;
+    3: number;
   };
 }
 
 export interface UserReserveData {
-  0: Array<{
-    underlyingAsset: string;
-    scaledATokenBalance: BigNumber;
-    usageAsCollateralEnabledOnUser: boolean;
-    stableBorrowRate: BigNumber;
-    scaledVariableDebt: BigNumber;
-    principalStableDebt: BigNumber;
-    stableBorrowLastUpdateTimestamp: BigNumber;
-  }>;
-  1: number;
+  underlyingAsset: string;
+  scaledATokenBalance: BigNumber;
+  usageAsCollateralEnabledOnUser: boolean;
+  stableBorrowRate: BigNumber;
+  scaledVariableDebt: BigNumber;
+  principalStableDebt: BigNumber;
+  stableBorrowLastUpdateTimestamp: BigNumber;
+  0: string;
+  1: BigNumber;
+  2: boolean;
+  3: BigNumber;
+  4: BigNumber;
+  5: BigNumber;
+  6: BigNumber;
 }
 
 export interface PoolBaseCurrencyHumanized {
@@ -117,34 +135,10 @@ export interface ReserveDataHumanized {
   stableDebtLastUpdateTimestamp: number;
   totalScaledVariableDebt: string;
   priceInMarketReferenceCurrency: string;
-  priceOracle: string;
   variableRateSlope1: string;
   variableRateSlope2: string;
   stableRateSlope1: string;
   stableRateSlope2: string;
-  baseStableBorrowRate: string;
-  baseVariableBorrowRate: string;
-  optimalUsageRatio: string;
-  // v3 only
-  isPaused: boolean;
-  isSiloedBorrowing: boolean;
-  accruedToTreasury: string;
-  unbacked: string;
-  isolationModeTotalDebt: string;
-  debtCeiling: string;
-  debtCeilingDecimals: number;
-  eModeCategoryId: number;
-  borrowCap: string;
-  supplyCap: string;
-  eModeLtv: number;
-  eModeLiquidationThreshold: number;
-  eModeLiquidationBonus: number;
-  eModePriceSource: string;
-  eModeLabel: string;
-  borrowableInIsolation: boolean;
-  flashLoanEnabled: boolean;
-  virtualAccActive: boolean;
-  virtualUnderlyingBalance: string;
 }
 
 export interface ReservesDataHumanized {

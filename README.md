@@ -1,21 +1,3 @@
-# <!--
-
-# 🚨 IMPORTANT NOTICE 🚨
-
--->
-
-> ⚠️ **ATTENTION: Main branch is not the source of truth for publishing or
-> important changes!**
->
-> Please refer to the branch **<YOUR-BRANCH-NAME-HERE>** for all updates,
-> publishing, and modifications.
->
-> - Do **NOT** use `master` for publishing until further notice.
-> - All new changes and releases should be made in **<YOUR-BRANCH-NAME-HERE>**.
-> - If you have any questions, please contact the maintainers.
-
----
-
 <h1 align="center">Aave Utilities - Nexus Fork</h1>
 
 > **Note**: This is a fork of the original

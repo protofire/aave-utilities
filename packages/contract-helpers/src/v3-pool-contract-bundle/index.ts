@@ -37,7 +37,7 @@ import { L2Pool, L2PoolInterface } from '../v3-pool-rollups';
 import {
   WETHGatewayInterface,
   WETHGatewayService,
-} from '../v3-wethgateway-contract';
+} from '../wethgateway-contract';
 
 export type SupplyTxBuilder = {
   generateTxData: ({
@@ -316,6 +316,7 @@ export class PoolBundle
             user,
             amount,
             debtTokenAddress,
+            interestRateMode,
             referralCode: referralCodeParam,
           });
         } else {
@@ -374,6 +375,7 @@ export class PoolBundle
             lendingPool: this.poolAddress,
             user,
             amount,
+            interestRateMode,
             onBehalfOf: onBehalfOfParam,
           });
         }

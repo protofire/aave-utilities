@@ -2,137 +2,13 @@
 /* eslint-disable */
 
 import { Contract, Signer, utils } from 'ethers';
-import type { Provider } from '@ethersproject/providers';
+import { Provider } from '@ethersproject/providers';
 import type {
-  UiPoolDataProviderV3,
-  UiPoolDataProviderV3Interface,
+  IUiPoolDataProviderV3,
+  IUiPoolDataProviderV3Interface,
 } from './IUiPoolDataProviderV3';
 
 const _abi = [
-  {
-    inputs: [
-      {
-        internalType: 'contract IEACAggregatorProxy',
-        name: '_networkBaseTokenPriceInUsdProxyAggregator',
-        type: 'address',
-      },
-      {
-        internalType: 'contract IEACAggregatorProxy',
-        name: '_marketReferenceCurrencyPriceInUsdProxyAggregator',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  },
-  {
-    inputs: [],
-    name: 'ETH_CURRENCY_UNIT',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'MKR_ADDRESS',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'bytes32',
-        name: '_bytes32',
-        type: 'bytes32',
-      },
-    ],
-    name: 'bytes32ToString',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'pure',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'contract IPoolAddressesProvider',
-        name: 'provider',
-        type: 'address',
-      },
-    ],
-    name: 'getEModes',
-    outputs: [
-      {
-        components: [
-          {
-            internalType: 'uint8',
-            name: 'id',
-            type: 'uint8',
-          },
-          {
-            components: [
-              {
-                internalType: 'uint16',
-                name: 'ltv',
-                type: 'uint16',
-              },
-              {
-                internalType: 'uint16',
-                name: 'liquidationThreshold',
-                type: 'uint16',
-              },
-              {
-                internalType: 'uint16',
-                name: 'liquidationBonus',
-                type: 'uint16',
-              },
-              {
-                internalType: 'uint128',
-                name: 'collateralBitmap',
-                type: 'uint128',
-              },
-              {
-                internalType: 'string',
-                name: 'label',
-                type: 'string',
-              },
-              {
-                internalType: 'uint128',
-                name: 'borrowableBitmap',
-                type: 'uint128',
-              },
-            ],
-            internalType: 'struct DataTypes.EModeCategory',
-            name: 'eMode',
-            type: 'tuple',
-          },
-        ],
-        internalType: 'struct IUiPoolDataProviderV3.Emode[]',
-        name: '',
-        type: 'tuple[]',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
   {
     inputs: [
       {
@@ -197,6 +73,11 @@ const _abi = [
           },
           {
             internalType: 'bool',
+            name: 'stableBorrowRateEnabled',
+            type: 'bool',
+          },
+          {
+            internalType: 'bool',
             name: 'isActive',
             type: 'bool',
           },
@@ -226,6 +107,11 @@ const _abi = [
             type: 'uint128',
           },
           {
+            internalType: 'uint128',
+            name: 'stableBorrowRate',
+            type: 'uint128',
+          },
+          {
             internalType: 'uint40',
             name: 'lastUpdateTimestamp',
             type: 'uint40',
@@ -233,6 +119,11 @@ const _abi = [
           {
             internalType: 'address',
             name: 'aTokenAddress',
+            type: 'address',
+          },
+          {
+            internalType: 'address',
+            name: 'stableDebtTokenAddress',
             type: 'address',
           },
           {
@@ -248,6 +139,21 @@ const _abi = [
           {
             internalType: 'uint256',
             name: 'availableLiquidity',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'totalPrincipalStableDebt',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'averageStableRate',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'stableDebtLastUpdateTimestamp',
             type: 'uint256',
           },
           {
@@ -273,6 +179,21 @@ const _abi = [
           {
             internalType: 'uint256',
             name: 'variableRateSlope2',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'stableRateSlope1',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'stableRateSlope2',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'baseStableBorrowRate',
             type: 'uint256',
           },
           {
@@ -326,6 +247,11 @@ const _abi = [
             type: 'uint256',
           },
           {
+            internalType: 'uint8',
+            name: 'eModeCategoryId',
+            type: 'uint8',
+          },
+          {
             internalType: 'uint256',
             name: 'borrowCap',
             type: 'uint256',
@@ -334,6 +260,31 @@ const _abi = [
             internalType: 'uint256',
             name: 'supplyCap',
             type: 'uint256',
+          },
+          {
+            internalType: 'uint16',
+            name: 'eModeLtv',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'eModeLiquidationThreshold',
+            type: 'uint16',
+          },
+          {
+            internalType: 'uint16',
+            name: 'eModeLiquidationBonus',
+            type: 'uint16',
+          },
+          {
+            internalType: 'address',
+            name: 'eModePriceSource',
+            type: 'address',
+          },
+          {
+            internalType: 'string',
+            name: 'eModeLabel',
+            type: 'string',
           },
           {
             internalType: 'bool',
@@ -439,7 +390,22 @@ const _abi = [
           },
           {
             internalType: 'uint256',
+            name: 'stableBorrowRate',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
             name: 'scaledVariableDebt',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'principalStableDebt',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'stableBorrowLastUpdateTimestamp',
             type: 'uint256',
           },
         ],
@@ -484,19 +450,19 @@ const _abi = [
   },
 ] as const;
 
-export class UiPoolDataProviderV3__factory {
+export class IUiPoolDataProviderV3__factory {
   static readonly abi = _abi;
-  static createInterface(): UiPoolDataProviderV3Interface {
-    return new utils.Interface(_abi) as UiPoolDataProviderV3Interface;
+  static createInterface(): IUiPoolDataProviderV3Interface {
+    return new utils.Interface(_abi) as IUiPoolDataProviderV3Interface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider,
-  ): UiPoolDataProviderV3 {
+  ): IUiPoolDataProviderV3 {
     return new Contract(
       address,
       _abi,
       signerOrProvider,
-    ) as UiPoolDataProviderV3;
+    ) as IUiPoolDataProviderV3;
   }
 }

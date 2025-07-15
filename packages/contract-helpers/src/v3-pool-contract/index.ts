@@ -53,7 +53,7 @@ import { L2Pool, L2PoolInterface } from '../v3-pool-rollups';
 import {
   WETHGatewayInterface,
   WETHGatewayService,
-} from '../v3-wethgateway-contract';
+} from '../wethgateway-contract';
 import {
   LPBorrowParamsType,
   LPSupplyParamsType,
@@ -582,12 +582,14 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
     @isEthAddress('user')
     @isEthAddress('reserve')
     @isPositiveOrMinusOneAmount('amount')
+    @isPositiveAmount('realAmount')
     @isEthAddress('onBehalfOf')
     @isEthAddress('aTokenAddress')
     {
       user,
       reserve,
       amount,
+      realAmount,
       onBehalfOf,
       aTokenAddress,
       useOptimizedPath,
@@ -604,6 +606,7 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
         lendingPool: this.poolAddress,
         user,
         amount,
+        realAmount,
         onBehalfOf,
         aTokenAddress,
       });
@@ -681,6 +684,7 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
         user,
         amount,
         debtTokenAddress,
+        interestRateMode,
         referralCode,
       });
     }
@@ -749,6 +753,7 @@ export class Pool extends BaseService<IPool> implements PoolInterface {
         lendingPool: this.poolAddress,
         user,
         amount,
+        interestRateMode,
         onBehalfOf,
       });
     }
